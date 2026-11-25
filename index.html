@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111827">
+  <title>Token Tracker</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="Token Tracker home">
+        <span class="brand-mark">T</span>
+        <span><strong>token tracker</strong><small>ACCOUNT WORKSPACE</small></span>
+      </a>
+      <div class="nav-label">WORKSPACE</div>
+      <nav class="nav">
+        <button class="nav-link active" data-view="dashboard"><span class="nav-icon">▦</span>Dashboard</button>
+        <button class="nav-link" data-view="accounts"><span class="nav-icon">▤</span>Manage accounts</button>
+        <button class="nav-link" data-view="settings"><span class="nav-icon">⚙</span>Settings</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="storage-indicator"><span class="status-dot"></span><span>Stored locally in this browser</span></div>
+        <div class="sidebar-version">TOKEN TRACKER <span>v1.0</span></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-mark">T</span><strong>token tracker</strong></div>
+        <div class="topbar-spacer"></div>
+        <div class="topbar-actions">
+          <button class="icon-button" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">☼</button>
+          <div class="notification-menu-wrap">
+            <button class="icon-button notification-toggle" id="notificationToggle" title="Notifications" aria-label="Open notifications" aria-expanded="false" aria-controls="notificationPopover">♧<span class="notification-count" id="notificationCount" hidden>0</span></button>
+            <section class="notification-popover" id="notificationPopover" hidden aria-label="Recent notifications">
+              <div class="notification-popover-heading"><div><strong>Notifications</strong><small id="notificationSummary">You're all caught up.</small></div><button class="text-button" id="markAllViewed">Mark all viewed</button></div>
+              <div id="notificationPopoverList" class="notification-popover-list"></div>
+              <button class="notification-footer-link" id="viewAllNotifications">View notification history</button>
+            </section>
+          </div>
+          <button class="avatar" title="Local workspace">TT</button>
+        </div>
+      </header>
+
+      <section class="page active" id="view-dashboard">
+        <div class="page-heading">
+          <div><div class="eyebrow">OVERVIEW</div><h1>Dashboard</h1><p class="muted">Know which account to use next.</p></div>
+          <button class="btn btn-primary" id="addAccountTop">＋ Add account</button>
+        </div>
+
+        <section class="recommendation-panel active-usage-panel">
+          <div class="panel-heading"><div><div class="eyebrow">CURRENTLY IN USE</div><h2>Active email & provider</h2></div><span class="recommendation-tag">LIVE STATUS</span></div>
+          <div id="activeUsageList" class="active-usage-list"></div>
+        </section>
+
+        <section class="content-section reset-section">
+          <div class="section-heading"><div><h2>Upcoming resets</h2><p class="muted">Prioritizing profiles that are close to resetting.</p></div></div>
+          <div id="upcomingResets" class="reset-list"></div>
+        </section>
+
+        <section class="content-section">
+          <div class="section-heading"><div><h2>Notifications</h2><p class="muted">Important reset and usage alerts.</p></div><button class="text-button" id="clearNotifications">Clear viewed</button></div>
+          <div id="notificationList" class="notification-list"></div>
+        </section>
+      </section>
+
+      <section class="page" id="view-accounts">
+        <div class="page-heading">
+          <div><div class="eyebrow">WORKSPACE</div><h1>Manage accounts</h1><p class="muted">Edit email identities and their provider-specific token status.</p></div>
+          <button class="btn btn-primary" id="addAccountPage">＋ Add account</button>
+        </div>
+        <div class="toolbar">
+          <div class="search-wrap"><span>⌕</span><input id="accountSearch" type="search" placeholder="Search email or provider..."></div>
+          <div class="toolbar-note" id="accountCount">0 provider profiles</div>
+        </div>
+        <div id="manageAccounts" class="manage-groups"></div>
+      </section>
+
+      <section class="page" id="view-settings">
+        <div class="page-heading"><div><div class="eyebrow">PREFERENCES</div><h1>Settings</h1><p class="muted">Manage appearance and protect your local data.</p></div></div>
+        <div class="settings-grid">
+          <section class="settings-card">
+            <div class="settings-card-heading"><div class="settings-symbol">◐</div><div><h2>Appearance</h2><p class="muted">Choose how Token Tracker looks.</p></div></div>
+            <label class="field-label" for="themeSelect">Color theme</label>
+            <select id="themeSelect" class="form-control"><option value="dark">Dark</option><option value="light">Light</option></select>
+          </section>
+          <section class="settings-card">
+            <div class="settings-card-heading"><div class="settings-symbol">♧</div><div><h2>Notifications</h2><p class="muted">Control the reminders shown in this app.</p></div></div>
+            <label class="toggle-row"><span><strong>Reset notifications</strong><small>Tell me when a profile reaches its reset date.</small></span><input type="checkbox" id="notifyReset" checked><i></i></label>
+            <label class="toggle-row"><span><strong>Low balance warnings</strong><small>Warn when remaining capacity is 20% or less.</small></span><input type="checkbox" id="notifyLow" checked><i></i></label>
+            <label class="toggle-row"><span><strong>Recommendations</strong><small>Show the smart account suggestion on the dashboard.</small></span><input type="checkbox" id="notifyRecommend" checked><i></i></label>
+            <label class="toggle-row"><span><strong>Past reset warnings</strong><small>Highlight profiles with a reset date in the past.</small></span><input type="checkbox" id="notifyExpired" checked><i></i></label>
+          </section>
+          <section class="settings-card full-width">
+            <div class="settings-card-heading"><div class="settings-symbol">⇅</div><div><h2>Data & backups</h2><p class="muted">Your data stays in this browser. Export backups regularly.</p></div></div>
+            <div class="backup-folder-setting"><div><strong>Backup folder</strong><small id="backupFolderStatus">Not configured. Select your project folder; Token Tracker will create and use its <code>backup</code> subfolder.</small></div><button class="btn btn-secondary" id="chooseBackupFolder">Choose folder</button></div>
+            <div class="backup-actions"><div><strong>Export your data</strong><small>Save all email accounts, provider profiles, and preferences as JSON in the backup folder.</small></div><button class="btn btn-secondary" id="exportSettings">↓ Export JSON</button></div>
+            <div class="backup-actions"><div><strong>Import a backup</strong><small>Open a JSON file from the backup folder and choose merge or replace.</small></div><button class="btn btn-secondary" id="importSettings">↑ Import JSON</button></div>
+            <div class="backup-reminder"><span>ⓘ</span><p><strong>Backup reminder</strong><br>LocalStorage is tied to this browser and device. Clearing browser data may remove your tracker. Keep a JSON backup somewhere safe.</p></div>
+            <div class="danger-zone"><div><strong>Reset application data</strong><small>Permanently remove all accounts and local notifications from this browser.</small></div><button class="btn btn-danger-outline" id="resetApp">Reset data</button></div>
+          </section>
+        </div>
+      </section>
+
+      <footer class="footer"><span>Token Tracker</span><span>Offline-first · Your data stays on this device</span></footer>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header"><div><div class="eyebrow" id="modalEyebrow">ACCOUNT MANAGEMENT</div><h2 id="modalTitle">Add email account</h2></div><button class="icon-button" id="closeModal" aria-label="Close">×</button></div>
+      <form id="accountForm">
+        <input type="hidden" id="editAccountId">
+        <div class="form-field"><label for="emailName">Email address or label</label><input class="form-control" id="emailName" type="text" placeholder="developer@example.com" required maxlength="160"></div>
+        <div class="form-divider"><span>PROVIDER PROFILE</span></div>
+        <input type="hidden" id="editProfileId">
+        <div class="form-field"><label for="providerName">AI provider</label><input class="form-control" id="providerName" type="text" placeholder="e.g. Codex, Antigravity" required maxlength="80"></div>
+        <div class="form-row">
+          <div class="form-field"><label for="remainingInput">Remaining tokens (%)</label><div class="input-suffix"><input class="form-control" id="remainingInput" type="number" min="0" max="100" step="1" value="100" required><span>%</span></div><small class="field-hint">Used percentage is calculated automatically.</small></div>
+          <div class="form-field"><label>Used tokens</label><div class="calculated-value" id="usedPreview">0% used</div><small class="field-hint">Calculated from remaining.</small></div>
+        </div>
+        <div class="form-field"><label for="resetInput">Next reset date and time</label><input class="form-control" id="resetInput" type="datetime-local" required><small class="field-hint">When reached, remaining tokens return to 100%. Set the next date manually afterward.</small></div>
+        <div class="form-field checkbox-field"><label><input type="checkbox" id="activeInput"> Mark this provider profile as currently active</label></div>
+        <div class="modal-actions"><button type="button" class="btn btn-secondary" id="cancelModal">Cancel</button><button type="submit" class="btn btn-primary" id="saveAccount">Save profile</button></div>
+      </form>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="importBackdrop" hidden>
+    <section class="modal small-modal" role="dialog" aria-modal="true" aria-labelledby="importTitle">
+      <div class="modal-header"><div><div class="eyebrow">DATA IMPORT</div><h2 id="importTitle">Import backup</h2></div><button class="icon-button" id="closeImport" aria-label="Close">×</button></div>
+      <p class="muted">How should imported records be handled?</p>
+      <div class="import-choice"><label><input type="radio" name="importMode" value="merge" checked><span><strong>Merge</strong><small>Add new accounts and profiles. Existing matching records are updated.</small></span></label><label><input type="radio" name="importMode" value="replace"><span><strong>Replace</strong><small>Replace all current accounts and preferences with the backup.</small></span></label></div>
+      <div class="modal-actions"><button class="btn btn-secondary" id="cancelImport">Cancel</button><button class="btn btn-primary" id="confirmImport">Choose JSON file</button></div>
+    </section>
+  </div>
+  <input type="file" id="jsonFileInput" accept=".json,application/json" hidden>
+  <div class="toast-region" id="toastRegion" aria-live="polite"></div>
+  <script src="js/storage.js"></script>
+  <script src="js/recommendations.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
